@@ -1,0 +1,30 @@
+.Footer-top {
+  background: #222222;
+  height: 2rem;
+}
+.Footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #1b1b1b;
+  color: #6f6f6f;
+  font-size: 0.9rem;
+  padding: 2rem 0;
+}
+.Footer-social-icons {
+  font-size: 1.2rem;
+}
+.Footer-social-icons i {
+  cursor: pointer;
+}
+.Footer-social-icons i:hover {
+  color: #c3c3c3 !important;
+}
+.Footer-links a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+.Footer-links a:hover {
+  color: #c3c3c3 !important;
+}

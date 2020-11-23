@@ -1,0 +1,16 @@
+.Dashboard i {
+  cursor: pointer;
+}
+.Dashboard i:hover {
+  opacity: 0.7;
+}
+.Dashboard-connect-to-calender {
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  .Dashboard-connect-to-calender {
+    justify-content: flex-start;
+    margin: 1rem 0;
+  }
+}

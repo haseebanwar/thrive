@@ -1,0 +1,10 @@
+.Basket i {
+  cursor: pointer;
+}
+.Basket i:hover {
+  opacity: 0.7;
+}
+.Basket-totalFields {
+  font-size: 1.4rem;
+  font-weight: 500;
+}

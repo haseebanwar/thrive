@@ -1,0 +1,25 @@
+.RecipeSearchMedia {
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+.RecipeSearchMedia-img {
+  padding: 0 !important;
+}
+.RecipeSearchMedia-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px 0 0 5px;
+}
+
+/* Just for loading skeleton */
+.RecipeSearchMedia-img span span {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .RecipeSearchMedia-img img,
+  .RecipeSearchMedia-img {
+    height: 12rem;
+  }
+}

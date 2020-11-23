@@ -1,0 +1,38 @@
+.Carousel {
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: url('../../images/carousel-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  height: 100%;
+  min-height: calc(100vh - 4.5rem);
+}
+.Carousel-content h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+}
+.border-line {
+  display: block;
+  width: 20%;
+  margin-top: 1rem;
+  border-bottom: 5px solid #fe344a;
+}
+.Carousel-search button {
+  border-top-right-radius: 0.25rem !important;
+  border-bottom-right-radius: 0.25rem !important;
+}
+ol li {
+  font-weight: bold;
+  color: #fe344a;
+}
+li > p {
+  font-weight: normal;
+  color: #ffffff;
+}

@@ -1,0 +1,9 @@
+.RecipeInfoBar {
+  display: flex;
+  margin: -0.5rem 0;
+  text-align: center;
+  font-size: 0.75rem;
+}
+.RecipeInfoBar div {
+  align-self: center;
+}

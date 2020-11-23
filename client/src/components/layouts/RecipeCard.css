@@ -1,0 +1,23 @@
+.RecipeCard.card {
+  border: none !important;
+  font-size: 0.9rem;
+  margin: 0.5rem;
+}
+.card .card-body {
+  padding: 1rem 0;
+}
+.card .card-img-top {
+  height: 12rem;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+.card .card-title {
+  height: 1.3rem;
+  font-weight: 600;
+  overflow: hidden;
+}
+.card .card-text {
+  height: 4.2rem;
+  overflow: hidden;
+}

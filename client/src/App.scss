@@ -1,0 +1,31 @@
+@import './config';
+@import '~bootstrap/scss/bootstrap';
+
+.App {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+}
+
+.text-primary {
+  color: #646464 !important;
+}
+.text-secondary {
+  color: $primary !important;
+}
+
+.btn.btn-light {
+  color: $primary;
+}
+.btn.btn-light:hover {
+  color: #fe344a;
+}
+.btn.btn.btn-light:focus,
+.btn.btn.btn-light.focus,
+.btn.btn.btn-light:active,
+.btn.btn.btn-light.active {
+  color: #fe344a;
+}
+
+.nav.nav-tabs > .nav-item > .nav-link {
+  color: $primary;
+}

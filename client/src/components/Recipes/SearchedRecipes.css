@@ -1,0 +1,15 @@
+.SearchedRecipes-sort-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.SearchedRecipes-sort-btn-container button {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .SearchedRecipes-sort-btn-container {
+    justify-content: flex-start;
+    margin: 1rem 0;
+  }
+}
