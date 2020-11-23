@@ -14,8 +14,10 @@ const app = express();
 // body parser
 app.use(express.json());
 
+// API routes
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/recipes', require('./routes/api/recipes'));
+app.use('/api/spoonacular', require('./routes/api/spoonacular'));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
