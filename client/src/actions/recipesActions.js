@@ -5,53 +5,32 @@ import {
   CLEAR_SEARCHED_RECIPES,
   SORT_SEARCHED_RECIPES,
   GET_RECIPE_INFORMATION,
-  ADJUST_RECIPE
+  ADJUST_RECIPE,
 } from './types';
 import axios from 'axios';
 import { USToCAD, adjustRecipe as adjustRecipeHelper } from '../Helpers';
 
-const API_KEY =
-  process.env.REACT_APP_SPOONACULAR_API_KEY ||
-  process.env.REACT_APP_SPOONACULAR_API_KEY_RAPID_API;
-const API_URL = process.env.REACT_APP_SPOONACULAR_API_KEY
-  ? 'https://api.spoonacular.com/recipes'
-  : 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes';
-
-export const setHeadersForSpoonacularAPI = () => {
-  if (process.env.REACT_APP_SPOONACULAR_API_KEY_RAPID_API) {
-    return {
-      headers: {
-        'x-rapidapi-host':
-          'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
-        'x-rapidapi-key': API_KEY
-      }
-    };
-  }
-};
-
 /* Fetch popular recipes from the API */
-export const getPopularRecipes = recipesToGet => async dispatch => {
+export const getPopularRecipes = (recipesToGet) => async (dispatch) => {
   // set recipes as loading
   dispatch(setRecipesLoading());
 
   // fetch recipes
   try {
-    const { data } = await axios.get(`${API_URL}/random`, {
-      ...setHeadersForSpoonacularAPI(),
+    const { data } = await axios.get(`/api/spoonacular/random`, {
       params: {
         number: recipesToGet,
         instructionsRequired: true,
-        apiKey: API_KEY
-      }
+      },
     });
-    const { recipes } = data;
-    const cleanedRecipes = recipes.map(recipe => ({
+    const { recipes } = data.spoonacularResponse;
+    const cleanedRecipes = recipes.map((recipe) => ({
       id: recipe.id,
       title: recipe.title,
       readyInMinutes: recipe.readyInMinutes,
       servings: recipe.servings,
       image: recipe.image,
-      instructions: recipe.instructions
+      instructions: recipe.instructions,
     }));
     dispatch({ type: GET_POPULAR_RECIPES, payload: cleanedRecipes });
   } catch (error) {
@@ -60,25 +39,23 @@ export const getPopularRecipes = recipesToGet => async dispatch => {
 };
 
 /* Search recipes based on user's query */
-export const searchRecipes = (recipesToGet, filters) => async dispatch => {
+export const searchRecipes = (recipesToGet, filters) => async (dispatch) => {
   // set recipes as loading
   dispatch(setRecipesLoading());
 
   // fetch recipes
   try {
-    const { data } = await axios.get(`${API_URL}/searchComplex`, {
-      ...setHeadersForSpoonacularAPI(),
+    const { data } = await axios.get(`/api/spoonacular/searchComplex`, {
       params: {
         number: recipesToGet,
         addRecipeInformation: true,
         instructionsRequired: true,
-        apiKey: API_KEY,
-        ...filters
-      }
+        ...filters,
+      },
     });
-    const { results } = data;
+    const { results } = data.spoonacularResponse;
     const cleanedRecipes = await Promise.all(
-      results.map(async recipe => ({
+      results.map(async (recipe) => ({
         id: recipe.id,
         title: recipe.title,
         readyInMinutes: recipe.readyInMinutes,
@@ -86,8 +63,8 @@ export const searchRecipes = (recipesToGet, filters) => async dispatch => {
         image: recipe.image,
         cost: await getRecipeIngredientsOrCost(recipe.id, 'COST'),
         instructions: recipe.analyzedInstructions[0]['steps'].map(
-          step => step['step']
-        )
+          (step) => step['step']
+        ),
       }))
     );
 
@@ -99,41 +76,44 @@ export const searchRecipes = (recipesToGet, filters) => async dispatch => {
 };
 
 /* Clear searched recipes from the state */
-export const clearSearchedRecipes = () => dispatch => {
+export const clearSearchedRecipes = () => (dispatch) => {
   dispatch({ type: CLEAR_SEARCHED_RECIPES });
 };
 
 /* Sort recipes in ascending order by given key */
-export const sortSearchedRecipes = sortKey => dispatch => {
+export const sortSearchedRecipes = (sortKey) => (dispatch) => {
   dispatch(setRecipesLoading());
   dispatch({ type: SORT_SEARCHED_RECIPES, payload: sortKey });
 };
 
 /* Get Recipe Information */
-export const getRecipeInformation = (id, cb) => async dispatch => {
+export const getRecipeInformation = (id, cb) => async (dispatch) => {
   // set recipes as loading
   dispatch(setRecipesLoading());
 
   // fetch recipe
   try {
-    const { data } = await axios.get(`${API_URL}/${id}/information`, {
-      ...setHeadersForSpoonacularAPI(),
+    const { data } = await axios.get(`/api/spoonacular/${id}/information`, {
       params: {
         includeNutrition: true,
-        apiKey: API_KEY
-      }
+      },
     });
+    const { spoonacularResponse } = data;
     const cleanedRecipe = {
-      id: data.id,
-      title: data.title,
-      readyInMinutes: data.readyInMinutes,
-      servings: data.servings,
-      image: data.image,
-      cost: await getRecipeIngredientsOrCost(data.id, 'COST'),
-      analyzedInstructions: data.analyzedInstructions[0]['steps'],
-      equipmentIntro: await getRecipeEquipmentIntro(data.id),
-      ingredients: await getRecipeIngredientsOrCost(data.id, 'INGREDIENTS'),
-      nutrition: data.nutrition
+      id: spoonacularResponse.id,
+      title: spoonacularResponse.title,
+      readyInMinutes: spoonacularResponse.readyInMinutes,
+      servings: spoonacularResponse.servings,
+      image: spoonacularResponse.image,
+      cost: await getRecipeIngredientsOrCost(spoonacularResponse.id, 'COST'),
+      analyzedInstructions:
+        spoonacularResponse.analyzedInstructions[0]['steps'],
+      equipmentIntro: await getRecipeEquipmentIntro(spoonacularResponse.id),
+      ingredients: await getRecipeIngredientsOrCost(
+        spoonacularResponse.id,
+        'INGREDIENTS'
+      ),
+      nutrition: spoonacularResponse.nutrition,
     };
 
     // set recipe to state
@@ -146,7 +126,7 @@ export const getRecipeInformation = (id, cb) => async dispatch => {
 };
 
 /* Adjust recipe according to servings */
-export const adjustRecipe = (newServings, recipe) => dispatch => {
+export const adjustRecipe = (newServings, recipe) => (dispatch) => {
   dispatch(setRecipesLoading());
   const adjustedRecipe = adjustRecipeHelper(parseInt(newServings), recipe);
   dispatch({ type: ADJUST_RECIPE, payload: adjustedRecipe });
@@ -166,28 +146,25 @@ const setRecipesLoading = () => ({ type: SET_RECIPES_LOADING });
 const getRecipeIngredientsOrCost = async (id, type) => {
   try {
     const { data } = await axios.get(
-      `${API_URL}/${id}/priceBreakdownWidget.json`,
-      {
-        ...setHeadersForSpoonacularAPI(),
-        params: {
-          apiKey: API_KEY
-        }
-      }
+      `/api/spoonacular/${id}/priceBreakdownWidget.json`
     );
+    const { spoonacularResponse } = data;
     switch (type) {
       case 'COST':
         const cost = {
-          costPerServing: USToCAD(data.totalCostPerServing),
-          totalCost: USToCAD(data.totalCost)
+          costPerServing: USToCAD(spoonacularResponse.totalCostPerServing),
+          totalCost: USToCAD(spoonacularResponse.totalCost),
         };
         return cost;
       case 'INGREDIENTS':
-        const ingredients = data.ingredients.map(ingredient => ({
-          name: ingredient.name,
-          image: `https://spoonacular.com/cdn/ingredients_100x100/${ingredient.image}`,
-          amount: ingredient.amount,
-          cost: USToCAD(ingredient.price)
-        }));
+        const ingredients = spoonacularResponse.ingredients.map(
+          (ingredient) => ({
+            name: ingredient.name,
+            image: `https://spoonacular.com/cdn/ingredients_100x100/${ingredient.image}`,
+            amount: ingredient.amount,
+            cost: USToCAD(ingredient.price),
+          })
+        );
         return ingredients;
       default:
         return null;
@@ -202,15 +179,13 @@ const getRecipeIngredientsOrCost = async (id, type) => {
  * Get Recipe Summary
  * Returns summary of the recipe
  */
-const getRecipeEquipmentIntro = async id => {
+const getRecipeEquipmentIntro = async (id) => {
   try {
-    const { data } = await axios.get(`${API_URL}/${id}/equipmentWidget.json`, {
-      ...setHeadersForSpoonacularAPI(),
-      params: {
-        apiKey: API_KEY
-      }
-    });
-    const equipmentNames = data.equipment.map(eq => eq.name);
+    const { data } = await axios.get(
+      `/api/spoonacular/${id}/equipmentWidget.json`
+    );
+    const { spoonacularResponse } = data;
+    const equipmentNames = spoonacularResponse.equipment.map((eq) => eq.name);
     let recipeIntro = 'For making this recipe you will need ';
     equipmentNames.forEach((eq, i) => {
       recipeIntro +=

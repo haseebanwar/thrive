@@ -10,6 +10,7 @@ exports.get = async (req, res) => {
     // make request to original url
     const { data } = await axiosForSpoonacular.get(reqURL);
 
+    // respond with spoonacular response
     return res.status(200).json({
       status: 'success',
       message: 'Request to spoonacular is successful',

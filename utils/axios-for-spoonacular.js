@@ -6,6 +6,7 @@ const axiosInstance = axios.create({
 });
 
 // request interceptor to add spoonacular api key
+axiosInstance.defaults.params = {};
 axiosInstance.interceptors.request.use((config) => {
   config.params['apiKey'] = process.env.SPOONACULAR_API_KEY;
   return config;
